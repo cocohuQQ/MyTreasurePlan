@@ -13,6 +13,7 @@
 		from asset_allocation a
 		join people b on a.people_code = b.code
 		join assets_type c on a.assets_type_code = c.code
+		where a.date = (select max(date) from asset_allocation)
 		group by b.name
 	</select>
 
