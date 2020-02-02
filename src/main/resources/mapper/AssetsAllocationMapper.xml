@@ -28,14 +28,14 @@
 		join assets_type c on a.assets_type_code = c.code
 		where b.code = #{peopleCode}
 		group by a.date,  c.describle
-	<!-- union all
+	  <!--   union all
 		select 
 			a.date, '总资产' as assetsTypeDes , sum(a.value) as value
 		from asset_allocation a
 		join people b on a.people_code = b.code
 		join assets_type c on a.assets_type_code = c.code
 		where b.code = #{peopleCode}
-		group by a.date -->	
+		group by a.date -->
 	</select>
 	
 	<!-- 总资产变化及各类资产变化 -->
@@ -53,6 +53,15 @@
 		join people b on a.people_code = b.code
 		join assets_type c on a.assets_type_code = c.code
 		group by a.date -->	
+	</select>
+	
+	<!-- 所有人资产变化轨迹 -->
+	<select id="getAssetsAllocationIncreaseGroupForEveryOne" resultMap="AssetsAllocationResultMap" >
+		select 
+			a.date, b.name , sum(a.value) as value
+		from asset_allocation a
+		join people b on a.people_code = b.code
+		group by b.name, a.date 
 	</select>
 	
 	<select id="getAssetsAllocationGroupByAssetsType" resultMap="AssetsAllocationResultMap" >

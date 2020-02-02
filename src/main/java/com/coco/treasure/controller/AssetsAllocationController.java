@@ -40,6 +40,47 @@ public class AssetsAllocationController {
 		return assetsAllocationMapper.getAssetsAllocationGroupByAssetsTypeForOverview();
 	};
 	
+	@RequestMapping("/changeCurveForEveryOne")
+	public String getAssetsAllocationIncreaseForEveryOne(){
+		Map<String,Object> returnData = new HashMap<String,Object>();
+		List<AssetsAllocationBean> result = assetsAllocationMapper.getAssetsAllocationIncreaseGroupForEveryOne();
+		if(result == null || result.isEmpty()) {
+			return JSONObject.toJSONString(returnData);
+		}
+		Set<String> names = new HashSet<>();
+		Set<Integer> dates = new HashSet<>();
+		Map<String, AssetsAllocationBean> datas = new HashMap<>();
+		for(AssetsAllocationBean bean : result) {
+			names.add(bean.getName());
+			dates.add(bean.getDate());
+			datas.put(bean.getDate()+"|"+bean.getName(), bean);
+		}
+		List<String> nameLst = new ArrayList<>(names);
+		List<Integer> dateLst = new ArrayList<>(dates);
+		Collections.sort(dateLst);
+		Map<String, List<BigDecimal>> returnDatas = new HashMap<String, List<BigDecimal>>();
+		for(Integer curDate : dateLst) {
+			for(String curName : names) {
+				if(!returnDatas.containsKey(curName)) {
+					returnDatas.put(curName, new ArrayList<BigDecimal>());
+				}
+				if(datas.containsKey(curDate+"|"+curName)) {
+					returnDatas.get(curName).add(datas.get(curDate+"|"+curName).getValue());
+				}else {
+					if(returnDatas.get(curName).size() == 0) {
+						returnDatas.get(curName).add(BigDecimal.ZERO);
+					}else {
+						returnDatas.get(curName).add(returnDatas.get(curName).get(returnDatas.get(curName).size() - 1));
+					}
+				}
+			}
+		}
+		returnData.put("dates", dateLst);
+		returnData.put("names", nameLst);
+		returnData.put("datas", returnDatas);
+		return JSONObject.toJSONString(returnData);
+	}
+	
 	@RequestMapping("/changeCurve/{peopleCode}")
 	public String getAssetsAllocationIncrease(@PathVariable(name="peopleCode") String peopleCode){
 		Map<String,Object> returnData = new HashMap<String,Object>();
@@ -83,7 +124,11 @@ public class AssetsAllocationController {
 				if(datas.containsKey(curDate+"|"+curType)) {
 					returnDatas.get(curType).add(datas.get(curDate+"|"+curType).getValue());
 				}else {
-					returnDatas.get(curType).add(BigDecimal.ZERO);
+					if(returnDatas.get(curType).size() == 0) {
+						returnDatas.get(curType).add(BigDecimal.ZERO);
+					}else {
+						returnDatas.get(curType).add(returnDatas.get(curType).get(returnDatas.get(curType).size() - 1));
+					}
 				}
 			}
 		}

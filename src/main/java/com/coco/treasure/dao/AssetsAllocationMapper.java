@@ -19,4 +19,6 @@ public interface AssetsAllocationMapper {
 	
 	List<AssetsAllocationBean> getAssetsAllocationIncreaseGroupByPeople(String peopleCode);
 	
+	List<AssetsAllocationBean> getAssetsAllocationIncreaseGroupForEveryOne();
+	
 }
