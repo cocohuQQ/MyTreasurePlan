@@ -10,4 +10,9 @@ import com.coco.treasure.bean.AssetsAllocationBean;
 public interface AssetsAllocationMapper {
 
 	List<AssetsAllocationBean> getAssetsAllocationGroupByPeople();
+	
+	List<AssetsAllocationBean> getAssetsAllocationGroupByAssetsType(String peopleCode);
+	
+	List<AssetsAllocationBean> getAssetsAllocationGroupByAssetsTypeForOverview();
+	
 }

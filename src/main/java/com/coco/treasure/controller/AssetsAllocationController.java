@@ -3,6 +3,7 @@ package com.coco.treasure.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,4 +21,15 @@ public class AssetsAllocationController {
 	public List<AssetsAllocationBean> getAssetsAllocationGroupByPeople(){
 		return assetsAllocationMapper.getAssetsAllocationGroupByPeople();
 	}
+	
+	@RequestMapping("/groupByType/{peopleCode}")
+	public List<AssetsAllocationBean> getAssetsAllocationGroupByType(@PathVariable(name="peopleCode") String peopleCode){
+		return assetsAllocationMapper.getAssetsAllocationGroupByAssetsType(peopleCode);
+	};
+	
+	@RequestMapping("/groupByType")
+	public List<AssetsAllocationBean> getAssetsAllocationGroupByType(){
+		return assetsAllocationMapper.getAssetsAllocationGroupByAssetsTypeForOverview();
+	};
+	
 }

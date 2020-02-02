@@ -5,6 +5,7 @@
 	<resultMap id="AssetsAllocationResultMap" type="com.coco.treasure.bean.AssetsAllocationBean">
 		<result column="name" property="name" />
 		<result column="value" property="value" />
+		<result column="assetsTypeDes" property="assetsTypeDes" />
 	</resultMap>
 
 	<select id="getAssetsAllocationGroupByPeople" resultMap="AssetsAllocationResultMap" >
@@ -16,5 +17,38 @@
 		where a.date = (select max(date) from asset_allocation)
 		group by b.name
 	</select>
+	
+	<select id="getAssetsAllocationIncreaseGroupByPeople" resultMap="AssetsAllocationResultMap" >
+		select 
+			a.date, b.name, sum(value) as value
+		from asset_allocation a
+		join people b on a.people_code = b.code
+		join assets_type c on a.assets_type_code = c.code
+		group by a.date, b.name
+		order by b.name, a.date
+	</select>
+	
+	<select id="getAssetsAllocationGroupByAssetsType" resultMap="AssetsAllocationResultMap" >
+		select 
+			b.name, c.describle as assetsTypeDes, sum(value) as value
+		from asset_allocation a
+		join people b on a.people_code = b.code
+		join assets_type c on a.assets_type_code = c.code
+		where a.date = (select max(date) from asset_allocation) 
+		 and b.code = #{peopleCode}
+		group by c.code, c.describle, b.name
+	</select>
+	
+	<select id="getAssetsAllocationGroupByAssetsTypeForOverview" resultMap="AssetsAllocationResultMap" >
+		select 
+			c.describle as assetsTypeDes, sum(value) as value
+		from asset_allocation a
+		join people b on a.people_code = b.code
+		join assets_type c on a.assets_type_code = c.code
+		where a.date = (select max(date) from asset_allocation) 
+		group by c.code, c.describle
+	</select>
+	
+	
 
 </mapper>
