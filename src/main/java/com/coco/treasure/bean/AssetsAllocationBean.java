@@ -9,6 +9,8 @@ public class AssetsAllocationBean {
 	private String assetsTypeDes;
 	
 	private BigDecimal value;
+	
+	private int date;
 
 	public String getName() {
 		return name;
@@ -32,5 +34,13 @@ public class AssetsAllocationBean {
 
 	public void setValue(BigDecimal value) {
 		this.value = value;
+	}
+
+	public int getDate() {
+		return date;
+	}
+
+	public void setDate(int date) {
+		this.date = date;
 	}
 }

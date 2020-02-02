@@ -6,6 +6,7 @@
 		<result column="name" property="name" />
 		<result column="value" property="value" />
 		<result column="assetsTypeDes" property="assetsTypeDes" />
+		<result column="date" property="date" />
 	</resultMap>
 
 	<select id="getAssetsAllocationGroupByPeople" resultMap="AssetsAllocationResultMap" >
@@ -21,15 +22,15 @@
 	<!-- 个人的总资产及各类资产变化 -->
 	<select id="getAssetsAllocationIncreaseGroupByPeople" resultMap="AssetsAllocationResultMap" >
 		select 
-			a.date, c.code, c.describle, sum(a.value) as value
+			a.date, c.describle as assetsTypeDes , sum(a.value) as value
 		from asset_allocation a
 		join people b on a.people_code = b.code
 		join assets_type c on a.assets_type_code = c.code
 		where b.code = #{peopleCode}
-		group by a.date, c.code, c.describle
+		group by a.date,  c.describle
 		union all
 		select 
-			a.date, '99999999999', '总资产', sum(a.value) as value
+			a.date, '总资产' as assetsTypeDes , sum(a.value) as value
 		from asset_allocation a
 		join people b on a.people_code = b.code
 		join assets_type c on a.assets_type_code = c.code
@@ -40,14 +41,14 @@
 	<!-- 总资产变化及各类资产变化 -->
 	<select id="getAssetsAllocationIncreaseGroupByPeopleForOverView" resultMap="AssetsAllocationResultMap" >
 		select 
-			a.date, c.code, c.describle, sum(a.value) as value
+			a.date, c.describle as assetsTypeDes, sum(a.value) as value
 		from asset_allocation a
 		join people b on a.people_code = b.code
 		join assets_type c on a.assets_type_code = c.code
-		group by a.date, c.code, c.describle
+		group by a.date, c.describle
 		union all
 		select 
-			a.date, '99999999999', '总资产', sum(a.value) as value
+			a.date, '总资产' as assetsTypeDes, sum(a.value) as value
 		from asset_allocation a
 		join people b on a.people_code = b.code
 		join assets_type c on a.assets_type_code = c.code
