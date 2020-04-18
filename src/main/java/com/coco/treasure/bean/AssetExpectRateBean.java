@@ -2,9 +2,11 @@ package com.coco.treasure.bean;
 
 import java.math.BigDecimal;
 
-import com.sun.xml.internal.bind.v2.runtime.RuntimeUtil.ToStringAdapter;
-
-public class AssetExpectRateBean {
+public class AssetExpectRateBean implements Cloneable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int date;
 	private int assetType;
 	private String assetDescrible;
@@ -47,6 +49,11 @@ public class AssetExpectRateBean {
 	}
 	public void setRate(BigDecimal rate) {
 		this.rate = rate;
+	}
+	
+	@Override
+	public AssetExpectRateBean clone() throws CloneNotSupportedException{
+		return (AssetExpectRateBean)super.clone();
 	}
 	
 	@Override

@@ -45,7 +45,7 @@ public class TrialCalculationController {
 		}
 	}
 	@RequestMapping("/reachTargetRate")
-	public Map<BigDecimal,List<AssetExpectRateBean>> calculateForTargetRate(@RequestBody CalculateForTargetRateParamBean param){
+	public Map<BigDecimal,List<AssetExpectRateBean>> calculateForTargetRate(@RequestBody CalculateForTargetRateParamBean param) throws CloneNotSupportedException{
 		Map<BigDecimal,List<AssetExpectRateBean>> returnData = new HashMap<BigDecimal,List<AssetExpectRateBean>>();
 		List<AssetExpectRateBean>  assetExpectRateLst = assetExpectRateMapper.getAssetExpectRateLst();
 		if( assetExpectRateLst == null || assetExpectRateLst.isEmpty()) {
@@ -63,10 +63,12 @@ public class TrialCalculationController {
 		}
 		
 		
-		for(BigDecimal targetRate = mMinTargetRate; targetRate.compareTo(mMaxTargetRate)<0 ;
+		for(BigDecimal targetRate = mMinTargetRate; targetRate.compareTo(mMaxTargetRate)<=0 ;
 				targetRate = (targetRate.add(new BigDecimal("1")) .compareTo(mMaxTargetRate) > 0 ? mMaxTargetRate: targetRate.add(new BigDecimal("1")))) {
 			List<AssetExpectRateBean> curAssetExpectRateLst = new ArrayList<AssetExpectRateBean>();
-			curAssetExpectRateLst.addAll(assetExpectRateLst);
+			for(AssetExpectRateBean curAssetExpectRateBean: assetExpectRateLst) {
+				curAssetExpectRateLst.add(curAssetExpectRateBean.clone());
+			}
 			curAssetExpectRateLst.get(0).setPersent(new BigDecimal("1"));
 			List<AssetExpectRateBean> calRateLst =  cal(targetRate, curAssetExpectRateLst);
             if(calRateLst != null && calRateLst.size() > 0) {
