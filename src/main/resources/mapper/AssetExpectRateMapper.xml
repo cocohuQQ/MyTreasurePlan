@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.coco.treasure.dao.AssetExpectRateMapper">
+
+	<resultMap id="AssetExpectRateMap" type="com.coco.treasure.bean.AssetExpectRateBean">
+		<result column="date" property="date" />
+		<result column="asset_type" property="assetType" />
+		<result column="asset_describle" property="assetDescrible" />
+		<result column="rate" property="rate" />
+	</resultMap>
+
+	<select id="getAssetExpectRateLst" resultMap="AssetExpectRateMap" >
+		select 
+		  date,
+		  asset_type,
+		  asset_describle,
+		  rate	
+		from asset_expect_rate
+		where date = (select max(date) from asset_expect_rate)
+		order by rate
+	</select>
+	
+	
+
+</mapper>
