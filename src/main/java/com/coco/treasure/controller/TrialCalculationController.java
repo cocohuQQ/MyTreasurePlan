@@ -72,12 +72,15 @@ public class TrialCalculationController {
 			}
 			curAssetExpectRateLst.get(0).setPersent(new BigDecimal("1"));
 			List<AssetExpectRateBean> calRateLst =  cal(targetRate, curAssetExpectRateLst);
+			BigDecimal factRate = BigDecimal.ZERO;
             if(calRateLst != null && calRateLst.size() > 0) {
             	for( AssetExpectRateBean curAssetExpectRateBean : calRateLst) {
             		curAssetExpectRateBean.setMoney(new BigDecimal(param.money +"").multiply(curAssetExpectRateBean.getPersent()).setScale(2,BigDecimal.ROUND_HALF_UP));
-            	    System.out.println(targetRate + "===" + curAssetExpectRateBean);
+            		factRate = factRate.add(curAssetExpectRateBean.getRate().multiply(curAssetExpectRateBean.getPersent()).setScale(6,BigDecimal.ROUND_HALF_UP));
+            		System.out.println(targetRate + "===" + curAssetExpectRateBean);
             	}
-            	returnData.put(targetRate.toPlainString(), calRateLst);
+            	factRate = factRate.setScale(2,BigDecimal.ROUND_HALF_UP);
+            	returnData.put(factRate.toPlainString(), calRateLst);
             }
 		}
 		return JSONObject.toJSONString(returnData);
@@ -111,7 +114,7 @@ public class TrialCalculationController {
 												.multiply(curAssetExpectRateBean.getRate())
 												.setScale(2,BigDecimal.ROUND_HALF_UP));
 			}
-			if(mTargetRate.compareTo(targetRate) > 0) {
+			if(mTargetRate.compareTo(targetRate) >= 0) {
 				return expectRateLst;
 			}
 			if(expectRateLst.size() - 1 > mToPostion) {
@@ -120,7 +123,7 @@ public class TrialCalculationController {
 				mToPostion = toPosition;
 			}
 		}
-		if(expectRateLst.size() >= fromPosition + 2 ) {
+		if(expectRateLst.size() > fromPosition + 2 ) {
 			return cal(targetRate,expectRateLst, fromPosition + 1,   fromPosition + 2);
 		}else {
 			return null;
