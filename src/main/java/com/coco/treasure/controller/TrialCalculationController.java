@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSONObject;
 import com.coco.treasure.bean.AssetExpectRateBean;
 import com.coco.treasure.dao.AssetExpectRateMapper;
 
@@ -45,11 +46,11 @@ public class TrialCalculationController {
 		}
 	}
 	@RequestMapping("/reachTargetRate")
-	public Map<BigDecimal,List<AssetExpectRateBean>> calculateForTargetRate(@RequestBody CalculateForTargetRateParamBean param) throws CloneNotSupportedException{
-		Map<BigDecimal,List<AssetExpectRateBean>> returnData = new HashMap<BigDecimal,List<AssetExpectRateBean>>();
+	public String calculateForTargetRate(@RequestBody CalculateForTargetRateParamBean param) throws CloneNotSupportedException{
+		Map<String,List<AssetExpectRateBean>> returnData = new HashMap<String,List<AssetExpectRateBean>>();
 		List<AssetExpectRateBean>  assetExpectRateLst = assetExpectRateMapper.getAssetExpectRateLst();
 		if( assetExpectRateLst == null || assetExpectRateLst.isEmpty()) {
-			return returnData;
+			return JSONObject.toJSONString(returnData);
 			}
 		//最小目标收益率
 		BigDecimal mMinTargetRate = param.minTargetRate;
@@ -64,7 +65,7 @@ public class TrialCalculationController {
 		
 		
 		for(BigDecimal targetRate = mMinTargetRate; targetRate.compareTo(mMaxTargetRate)<=0 ;
-				targetRate = (targetRate.add(new BigDecimal("1")) .compareTo(mMaxTargetRate) > 0 ? mMaxTargetRate: targetRate.add(new BigDecimal("1")))) {
+				targetRate = targetRate.add(new BigDecimal("1"))) {
 			List<AssetExpectRateBean> curAssetExpectRateLst = new ArrayList<AssetExpectRateBean>();
 			for(AssetExpectRateBean curAssetExpectRateBean: assetExpectRateLst) {
 				curAssetExpectRateLst.add(curAssetExpectRateBean.clone());
@@ -76,10 +77,10 @@ public class TrialCalculationController {
             		curAssetExpectRateBean.setMoney(new BigDecimal(param.money +"").multiply(curAssetExpectRateBean.getPersent()).setScale(2,BigDecimal.ROUND_HALF_UP));
             	    System.out.println(targetRate + "===" + curAssetExpectRateBean);
             	}
-            	returnData.put(targetRate, calRateLst);
+            	returnData.put(targetRate.toPlainString(), calRateLst);
             }
 		}
-		return returnData;
+		return JSONObject.toJSONString(returnData);
 	}
 	
 	private List<AssetExpectRateBean> cal(BigDecimal targetRate, List<AssetExpectRateBean> expectRateLst){
