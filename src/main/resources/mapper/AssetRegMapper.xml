@@ -13,6 +13,23 @@
 		order by a.code, b.code
 	</select>
 	
+	<insert id="insertAssetItems" parameterType="java.util.List">
+		replace into asset_allocation(
+			date,
+			people_code,
+			assets_type_code,
+			value
+		)values
+	   <foreach collection="list" item="item" separator=",">
+	        (
+	          #{item.date},
+	          #{item.peopleCode},
+	          #{item.assetsTypeCode},
+	          #{item.value}
+	        )
+	   </foreach>
+	</insert>
+	
 	
 
 </mapper>

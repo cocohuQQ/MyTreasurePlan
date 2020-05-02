@@ -11,6 +11,10 @@ public class AssetsAllocationBean {
 	private BigDecimal value;
 	
 	private int date;
+	
+	private String peopleCode;
+	
+	private String assetsTypeCode;
 
 	public String getName() {
 		return name;
@@ -42,5 +46,21 @@ public class AssetsAllocationBean {
 
 	public void setDate(int date) {
 		this.date = date;
+	}
+
+	public String getPeopleCode() {
+		return peopleCode;
+	}
+
+	public void setPeopleCode(String peopleCode) {
+		this.peopleCode = peopleCode;
+	}
+
+	public String getAssetsTypeCode() {
+		return assetsTypeCode;
+	}
+
+	public void setAssetsTypeCode(String assetsTypeCode) {
+		this.assetsTypeCode = assetsTypeCode;
 	}
 }

@@ -6,10 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.coco.treasure.bean.AssetsAllocationBean;
 import com.coco.treasure.dao.AssetRegMapper;
 
 @RestController
@@ -41,6 +44,13 @@ public class AssetRegController {
 			((ArrayList)returnData.get(peopleCode).get("assets")).add(curItem);
 		}
 		return JSONObject.toJSONString(returnData);
+	}
+	
+	@RequestMapping("/regAssetForAllPeople")
+	public void regAssetForAllPeople(@RequestBody List<AssetsAllocationBean> assetsAllocationBeans) {
+		if(assetsAllocationBeans != null && !assetsAllocationBeans.isEmpty()) {
+			assetRegMapper.insertAssetItems(assetsAllocationBeans);
+		}
 	}
 
 }
